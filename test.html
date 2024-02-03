@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+    <style>* {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-family: 'Arial';
+    }
+    
+    html,
+    body {
+        height: 100%;
+    }
+    
+    ul > li {
+        list-style: none;
+    }
+    
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .container {
+        padding: 15px;
+        width: 700px;
+        height: 800px;
+        border-radius: 5px;
+        border: 1px solid rgb(112, 112, 112);
+        background: black;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    h1 {
+        margin-bottom: 5px;
+        color: white;
+    }
+    
+    .buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 5px;
+    }
+    
+    .buttons > button {
+        font-size: 25px;
+        padding: 5px;
+        border-radius: 20px;
+    }
+    
+    ul {
+        overflow-y: auto;
+        background: white;
+        border-radius: 5px;
+        border: 1px solid rgb(112, 112, 112);
+        height: 100%;
+        width: 100%;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    li {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+        background: #8080802f;
+        padding: 10px;
+    }
+    
+    .block-color {
+        width: 62px;
+        height: 62px;
+        background: #000;
+    }
+    
+    .title {
+        font-size: 25px;
+        text-decoration: underline;
+    }
+    
+    .price {
+        font-size: 20px;
+    }
+    
+    .products > li {
+        border: #000 solid 3px;
+        border-radius: 10px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    .block_name {
+        width: 100%;
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .post_name {
+        font-size: 30px;
+    }
+    
+    .lower_block {
+        width: 100%;
+        height: 200px;
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .post_comments {
+        width: 70%;
+        border: 3px solid black;
+        border-radius: 10px;
+        overflow-y: auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        padding: 10px;
+    }
+    
+    .post_comments > ul > li {
+        border: 2px solid black;
+        border-radius: 10px;
+    
+    }
+    
+    .add_comment {
+        background: white;
+        font-size: 20px;
+        width: 200px;
+        height: 50px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .post_evaluator {
+        display: flex;
+        width: 27%;
+        border: 3px solid black;
+        border-radius: 10px;
+        flex-wrap: wrap ;
+    }
+    
+    .like {
+        width: 100%;
+        height: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 30px;
+    }
+    
+    .dislike {
+        width: 100%;
+        height: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 30px;
+    }</style>
+	<body>
+		<div class="container">
+			<h1>Посты:</h1>
+			<div class="buttons">
+				<button class="get">Показать посты</button>
+				<button class="post">Создать пост</button>
+				<button class="delete">Удалить пост по id</button>
+			</div>
+
+			<ul class="products">
+                
+            </ul>
+		</div>
+        <script src="https://kit.fontawesome.com/0b743f9458.js" crossorigin="anonymous"></script>
+		
+        <script>
+const list = document.querySelector('.products')
+const getBtn = document.querySelector('.get')
+const postBtn = document.querySelector('.post')
+const patchBtn = document.querySelector('.patch')
+const deleteBtn = document.querySelector('.delete')
+const commentbtn = document.querySelector(".add_comment")
+
+const getData = url => {
+return new Promise((resolve, reject) =>
+fetch(url)
+    .then(response => response.json())
+    .then(json => resolve(json))
+    .catch(error => reject(error))
+)
+}
+const postData = (url, product) => {
+return new Promise((resolve, reject) =>
+fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(product),
+    headers: { 'Content-type': 'application/json; charset=UTF-8' }
+})
+    .then(response => response.json())
+    .then(json => resolve(json))
+    .catch(error => reject(error))
+)
+}
+
+const postDataComment = (url, product) => {
+return new Promise((resolve, reject) =>
+fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(product),
+    headers: { 'Content-type': 'application/json; charset=UTF-8' }
+})
+    .then(response => response.json())
+    .then(json => resolve(json))
+    .catch(error => reject(error))
+)
+}
+
+const patchData = (url, product) => {
+return new Promise((resolve, reject) =>
+fetch(url, {
+    method: 'PATCH',
+    body: JSON.stringify(product),
+    headers: { 'Content-type': 'application/json; charset=UTF-8' }
+})
+    .then(response => response.json())
+    .then(json => resolve(json))
+    .catch(error => reject(error))
+)
+}
+
+const delData = url => {
+return new Promise((resolve, reject) =>
+fetch(url, { method: 'DELETE' })
+    .then(response => response.json())
+    .then(json => resolve(json))
+    .catch(error => reject(error))
+)
+}
+
+getBtn.addEventListener('click', async e => {
+e.preventDefault()
+try {
+const products = await getData('http://localhost:3000/POSTS')
+products.forEach(element => {
+    list.insertAdjacentHTML(
+        `beforeend`,
+        `
+    <li>
+        <div class="block_name">
+            <p class="post_name">${element.name}</p>
+        </div>
+        <div class="lower_block">
+            <div class="post_comments">
+                <button class="add_comment">Добавить коммент</button>
+                <ul>
+                ${
+                    element.comments.map(comment => `<li>${comment}</li>`).join('')
+                  }
+                </ul>
+            </div>
+            <div class="post_evaluator">
+                <div class="like"><i class="fa-solid fa-thumbs-up i-like" style="color: #00ff11;"></i>${element.like}</div>
+                <div class="dislike"><i class="fa-solid fa-thumbs-down i-dislike" style="color: #ff0000;"></i>${element.dislike}</div>
+            </div>
+        </div>
+    </li>
+    `
+    )
+})
+} catch (error) {
+console.log(error)
+}
+})
+
+postBtn.addEventListener('click', async e => {
+e.preventDefault()
+let name = prompt('введите название')
+let like = +prompt('введите кол-во лайков')
+let dislike = prompt('введите кол-во дизлайков')
+let comments = prompt('введите комменты').split(', ')
+try {
+await postData('http://localhost:3000/POSTS', {
+    id: name.trim(''),
+    name,
+    like,
+    dislike,
+    comments
+}).then(response => {
+    console.log(response, 'данные успешно добавлены')
+})
+} catch (error) {
+console.error(error)
+}
+})
+
+commentbtn.addEventListener('click', async e => {
+e.preventDefault()
+let name = prompt('введите название')
+let like = +prompt('введите кол-во лайков')
+let dislike = prompt('введите кол-во дизлайков')
+let comments = prompt('введите комменты').split(', ')
+try {
+await postData('http://localhost:3000/POSTS', {
+    id: name.trim(''),
+    name,
+    like,
+    dislike,
+    comments
+}).then(response => {
+    console.log(response, 'данные успешно добавлены')
+})
+} catch (error) {
+console.error(error)
+}
+})
+
+deleteBtn.addEventListener('click', async e => {
+e.preventDefault()
+const id = prompt('введите id')
+try {
+delData(`http://localhost:3000/POSTS/${id}`).then(response => {
+    console.log(response, `продукт с id = ${id} успешно удалён`)
+})
+} catch (err) {
+console.error(err, 'ошибка при удалении')
+}
+})
+</script>
+	</body>
+</html>
